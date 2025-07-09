@@ -1,4 +1,4 @@
-import { sqliteTable, integer, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
 
 export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
@@ -15,6 +15,20 @@ export const session = sqliteTable('session', {
 	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
 });
 
+// Time tracking table
+export const timeEntry = sqliteTable('time_entry', {
+	id: text('id').primaryKey(),
+	userId: text('user_id')
+		.notNull()
+		.references(() => user.id),
+	date: text('date').notNull(), // ISO date string (YYYY-MM-DD)
+	startTime: text('start_time').notNull(), // HH:mm
+	endTime: text('end_time').notNull(), // HH:mm
+	description: text('description').notNull()
+});
+
 export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
+
+export type TimeEntry = typeof timeEntry.$inferSelect;
