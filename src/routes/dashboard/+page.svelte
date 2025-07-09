@@ -1,12 +1,14 @@
 <script lang="ts">
 	import type { PageServerData } from './$types';
+	import { Button } from "$lib/components/ui/button/index.js";
+
 	let { data }: { data: PageServerData } = $props();
 </script>
 
 <h1>Hi, {data.user.username}!</h1>
 <p>Your user ID is {data.user.id}.</p>
 <form method="post" action="?/logout">
-	<button class="rounded-md bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700">
+	<Button type="submit">
         Sign out
-    </button>
+    </Button>
 </form>
