@@ -4,7 +4,8 @@ export const user = sqliteTable('user', {
 	id: text('id').primaryKey(),
 	age: integer('age'),
 	username: text('username').notNull().unique(),
-	passwordHash: text('password_hash').notNull()
+	passwordHash: text('password_hash').notNull(),
+	role: text('role').notNull().default('user') // 'user' or 'admin'
 });
 
 export const session = sqliteTable('session', {
@@ -30,5 +31,6 @@ export const timeEntry = sqliteTable('time_entry', {
 export type Session = typeof session.$inferSelect;
 
 export type User = typeof user.$inferSelect;
+export type UserRole = 'user' | 'admin';
 
 export type TimeEntry = typeof timeEntry.$inferSelect;

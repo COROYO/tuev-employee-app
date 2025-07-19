@@ -15,6 +15,13 @@
       "when": 1752076493156,
       "tag": "0001_rainy_clea",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1752923796235,
+      "tag": "0002_redundant_overlord",
+      "breakpoints": true
     }
   ]
 }
