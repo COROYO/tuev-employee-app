@@ -1,14 +1,21 @@
-
 <script lang="ts">
 	import type { PageServerData } from './$types';
 	import { Button } from "$lib/components/ui/button/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
+	import { goto } from '$app/navigation';
 
 	let { data }: { data: PageServerData } = $props();
 	let formError: string | null = null;
 	let formSuccess: boolean = false;
 </script>
+
+<!-- Admin Panel Button (visible only to admins) -->
+{#if data.user?.role === 'admin'}
+	<div class="w-full max-w-lg mx-auto mb-4 flex justify-end">
+		<button type="button" class="px-3 py-1 text-sm border rounded" on:click={() => goto('/admin-dashboard')}>Admin Panel</button>
+	</div>
+{/if}
 
 <!-- Quick Time Entry Form (Mobile-First, prominent) -->
 <section class="w-full max-w-lg mx-auto mt-4 mb-8">

@@ -3,12 +3,18 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 import { db } from '$lib/server/db';
-import { timeEntry } from '$lib/server/db/schema';
+import { timeEntry, user as userTable } from '$lib/server/db/schema';
 import { randomUUID } from 'crypto';
 import { desc, eq } from 'drizzle-orm';
 
 export const load: PageServerLoad = async (event) => {
 	if (!event.locals.user) {
+		return redirect(302, '/login');
+	}
+	// Fetch user from DB to get the role
+	const users = await db.select().from(userTable).where(eq(userTable.id, event.locals.user.id));
+	const dbUser = users[0];
+	if (!dbUser) {
 		return redirect(302, '/login');
 	}
 	// Fetch time entries for the logged-in user, newest first
@@ -18,7 +24,7 @@ export const load: PageServerLoad = async (event) => {
 		.where(eq(timeEntry.userId, event.locals.user.id))
 		.orderBy(desc(timeEntry.date), desc(timeEntry.startTime));
 	return {
-		user: event.locals.user,
+		user: dbUser,
 		timeEntries: entries
 	};
 };

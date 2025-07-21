@@ -50,6 +50,10 @@ export const actions: Actions = {
 		const session = await auth.createSession(sessionToken, existingUser.id);
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
+		// Redirect admin users to admin dashboard
+		if (existingUser.role === 'admin') {
+			return redirect(302, '/admin-dashboard');
+		}
 		return redirect(302, '/dashboard');
 	},
 	register: async (event) => {
