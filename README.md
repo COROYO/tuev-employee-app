@@ -2,6 +2,31 @@
 
 Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
+## Promote User to Admin API
+
+You can promote a user to admin using the following API endpoint:
+
+**Endpoint:** `POST /api/promote-to-admin`
+
+**Request Body:**
+```json
+{
+  "username": "the_username",
+  "password": "your_admin_promote_password"
+}
+```
+
+**Example cURL:**
+```bash
+curl -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"username": "alice", "password": "changeme"}' \
+  http://localhost:5173/api/promote-to-admin
+```
+
+- Returns `{ "success": true }` on success.
+- Returns `{ "error": "Bad request" }` with status 400 for any failure (invalid password, missing fields, or user not found).
+
 ## Creating a project
 
 If you're seeing this, you've probably already done this step. Congrats!
