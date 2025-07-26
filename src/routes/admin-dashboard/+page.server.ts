@@ -12,15 +12,26 @@ export const load: PageServerLoad = async (event) => {
 
 	// Fetch user from DB to get the role
 	const userId = event.locals.user.id;
-	const users = await db.select().from(table.user).where(eq(table.user.id, userId));
-	const dbUser = users[0];
+	const users = await db.select().from(table.user);
+	const dbUser = users.find((u) => u.id === userId);
 	if (!dbUser) {
 		throw redirect(302, '/login');
 	}
 	if (dbUser.role !== 'admin') {
 		throw redirect(302, '/dashboard');
 	}
-	return { user: dbUser };
+
+	// Get date from query params, default to today
+	const url = event.url;
+	let date = url.searchParams.get('date');
+	if (!date) {
+		date = new Date().toISOString().split('T')[0];
+	}
+
+	// Fetch only time entries for the selected date
+	const timeEntries = await db.select().from(table.timeEntry).where(eq(table.timeEntry.date, date));
+
+	return { users, timeEntries, selectedDate: date };
 };
 
 export const actions: Actions = {
