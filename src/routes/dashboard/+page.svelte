@@ -1,20 +1,38 @@
 <script lang="ts">
-	import type { PageServerData } from './$types';
-	import { Button } from "$lib/components/ui/button/index.js";
-	import { Input } from "$lib/components/ui/input/index.js";
-	import { Label } from "$lib/components/ui/label/index.js";
-	import { goto } from '$app/navigation';
+import type { PageServerData } from './$types';
+import { Button } from "$lib/components/ui/button/index.js";
+import { Input } from "$lib/components/ui/input/index.js";
+import { Label } from "$lib/components/ui/label/index.js";
+import { goto } from '$app/navigation';
 
-	let { data }: { data: PageServerData } = $props();
-	let formError: string | null = null;
-	let formSuccess: boolean = false;
+let { data }: { data: PageServerData } = $props();
+let formError: string | null = null;
+let formSuccess: boolean = false;
+
+// Month navigation logic
+function getMonthName(month: string) {
+  const [year, monthNum] = month.split('-').map(Number);
+  return new Date(year, monthNum - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+}
+
+function changeMonth(offset: number) {
+  const [year, monthNum] = data.selectedMonth.split('-').map(Number);
+  const d = new Date(year, monthNum - 1 + offset);
+  const newMonth = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+  const url = new URL(window.location.href);
+  url.searchParams.set('month', newMonth);
+  goto(url.pathname + url.search);
+}
 </script>
+
+
+
 
 <!-- Admin Panel Button (visible only to admins) -->
 {#if data.user?.role === 'admin'}
-	<div class="w-full max-w-lg mx-auto mb-4 flex justify-end">
-		<button type="button" class="px-3 py-1 text-sm border rounded" on:click={() => goto('/admin-dashboard')}>Admin Panel</button>
-	</div>
+  <div class="w-full max-w-lg mx-auto mb-4 flex justify-end">
+	<button type="button" class="px-3 py-1 text-sm border rounded" on:click={() => goto('/admin-dashboard')}>Admin Panel</button>
+  </div>
 {/if}
 
 <!-- Quick Time Entry Form (Mobile-First, prominent) -->
@@ -48,6 +66,13 @@
 		<Button type="submit" class="w-full py-3 text-lg font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-md sticky-btn">Add Time Entry</Button>
 	</form>
 </section>
+
+<!-- Month Navigation -->
+<div class="w-full max-w-lg mx-auto flex items-center justify-center gap-2 mt-4 mb-4">
+  <Button type="button" on:click={() => changeMonth(-1)} aria-label="Previous month">←</Button>
+  <span class="font-semibold">{getMonthName(data.selectedMonth)}</span>
+  <Button type="button" on:click={() => changeMonth(1)} aria-label="Next month">→</Button>
+</div>
 
 <!-- Time Entries List (below form, mobile-friendly) -->
 {#if data.timeEntries && data.timeEntries.length > 0}
