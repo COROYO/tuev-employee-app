@@ -1,31 +1,31 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { datetime, int, mysqlTable, varchar } from 'drizzle-orm/mysql-core';
 
-export const user = sqliteTable('user', {
-	id: text('id').primaryKey(),
-	age: integer('age'),
-	username: text('username').notNull().unique(),
-	passwordHash: text('password_hash').notNull(),
-	role: text('role').notNull().default('user') // 'user' or 'admin'
+export const user = mysqlTable('user', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	age: int('age'),
+	username: varchar('username', { length: 32 }).notNull().unique(),
+	passwordHash: varchar('password_hash', { length: 255 }).notNull(),
+	role: varchar('role', { length: 32 }).notNull().default('user') // 'user' or 'admin'
 });
 
-export const session = sqliteTable('session', {
-	id: text('id').primaryKey(),
-	userId: text('user_id')
+export const session = mysqlTable('session', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull()
+	expiresAt: datetime('expires_at').notNull()
 });
 
 // Time tracking table
-export const timeEntry = sqliteTable('time_entry', {
-	id: text('id').primaryKey(),
-	userId: text('user_id')
+export const timeEntry = mysqlTable('time_entry', {
+	id: varchar('id', { length: 255 }).primaryKey(),
+	userId: varchar('user_id', { length: 255 })
 		.notNull()
 		.references(() => user.id),
-	date: text('date').notNull(), // ISO date string (YYYY-MM-DD)
-	startTime: text('start_time').notNull(), // HH:mm
-	endTime: text('end_time').notNull(), // HH:mm
-	description: text('description').notNull()
+	date: varchar('date', { length: 10 }).notNull(), // ISO date string (YYYY-MM-DD)
+	startTime: varchar('start_time', { length: 5 }).notNull(), // HH:mm
+	endTime: varchar('end_time', { length: 5 }).notNull(), // HH:mm
+	description: varchar('description', { length: 255 }).notNull()
 });
 
 export type Session = typeof session.$inferSelect;
