@@ -68,30 +68,36 @@ function changeMonth(offset: number) {
 {#if data.timeEntries && data.timeEntries.length > 0}
 	<section class="w-full max-w-lg mx-auto">
 		<h2 class="mt-2 mb-2 text-lg font-semibold text-center">Your Time Entries</h2>
-		<ul class="mb-6">
-			{#each data.timeEntries as entry (entry.id)}
-				<li class="mb-2 p-3 border rounded">
-					<div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full items-start sm:items-center">
-						<div>
-							<span class="block text-xs text-gray-500">Date</span>
-							<span class="font-medium">{formatDateToGerman(entry.date)}</span>
-						</div>
-						<div>
-							<span class="block text-xs text-gray-500">From</span>
-							<span>{entry.startTime}</span>
-						</div>
-						<div>
-							<span class="block text-xs text-gray-500">To</span>
-							<span>{entry.endTime}</span>
-						</div>
-						<div class="flex-1 min-w-0">
-							<span class="block text-xs text-gray-500">Description</span>
-							<span class="truncate">{entry.description}</span>
-						</div>
-					</div>
-				</li>
-			{/each}
-		</ul>
+		{#each Object.entries(data.timeEntries.reduce((acc, entry) => {
+			const date = entry.date;
+			if (!acc[date]) acc[date] = [];
+			acc[date].push(entry);
+			return acc;
+		}, {} as Record<string, typeof data.timeEntries>)).sort(([a], [b]) => new Date(b).getTime() - new Date(a).getTime()) as [date, entries], i}
+			<div class="mb-4">
+				<h3 class="text-md font-semibold mb-2">{formatDateToGerman(date)}</h3>
+				<ul class="space-y-2">
+					{#each entries as entry (entry.id)}
+						<li class="p-3 border rounded">
+							<div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full items-start sm:items-center">
+								<div>
+									<span class="block text-xs text-gray-500">From</span>
+									<span>{entry.startTime}</span>
+								</div>
+								<div>
+									<span class="block text-xs text-gray-500">To</span>
+									<span>{entry.endTime}</span>
+								</div>
+								<div class="flex-1 min-w-0">
+									<span class="block text-xs text-gray-500">Description</span>
+									<span class="truncate">{entry.description}</span>
+								</div>
+							</div>
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/each}
 	</section>
 {/if}
 
