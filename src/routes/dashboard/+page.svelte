@@ -105,13 +105,6 @@ function changeMonth(offset: number) {
 	</section>
 {/if}
 
-<!-- Add Time Entry Form -->
-
-
-<form method="post" action="?/logout" class="w-full max-w-lg mx-auto mb-8">
-	<Button type="submit" class="w-full">Sign out</Button>
-</form>
-
 <style>
 @media (max-width: 640px) {
   .sticky-btn {
