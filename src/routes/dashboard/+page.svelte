@@ -4,6 +4,7 @@ import { Button } from "$lib/components/ui/button/index.js";
 import { Input } from "$lib/components/ui/input/index.js";
 import { Label } from "$lib/components/ui/label/index.js";
 import { goto } from '$app/navigation';
+import { formatDateToGerman, formatMonthYearToGerman } from '$lib/utils';
 
 let { data }: { data: PageServerData } = $props();
 let formError: string | null = null;
@@ -11,8 +12,7 @@ let formSuccess: boolean = false;
 
 // Month navigation logic
 function getMonthName(month: string) {
-  const [year, monthNum] = month.split('-').map(Number);
-  return new Date(year, monthNum - 1).toLocaleString('default', { month: 'long', year: 'numeric' });
+  return formatMonthYearToGerman(month);
 }
 
 function changeMonth(offset: number) {
@@ -74,7 +74,7 @@ function changeMonth(offset: number) {
 					<div class="flex flex-col sm:flex-row gap-2 sm:gap-4 w-full items-start sm:items-center">
 						<div>
 							<span class="block text-xs text-gray-500">Date</span>
-							<span class="font-medium">{entry.date}</span>
+							<span class="font-medium">{formatDateToGerman(entry.date)}</span>
 						</div>
 						<div>
 							<span class="block text-xs text-gray-500">From</span>
