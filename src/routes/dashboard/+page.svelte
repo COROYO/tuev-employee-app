@@ -108,7 +108,7 @@ function changeMonth(offset: number) {
 			</div>
 			<div class="flex-1">
 				<Label for="startTime">⏰ From</Label>
-				<Input id="startTime" name="startTime" type="time" required class="w-full" />
+				<Input id="startTime" name="startTime" type="time" required class="w-full" value={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} />
 			</div>
 			<div class="flex-1">
 				<Label for="endTime">⏱️ To</Label>

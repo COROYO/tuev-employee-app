@@ -130,9 +130,7 @@ export const actions: Actions = {
 			return fail(403, { message: 'Time entry not found or access denied.' });
 		}
 
-		await db
-			.delete(timeEntry)
-			.where(eq(timeEntry.id, String(id)));
+		await db.delete(timeEntry).where(eq(timeEntry.id, String(id)));
 
 		return { success: true };
 	}
