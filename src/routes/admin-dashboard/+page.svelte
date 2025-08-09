@@ -1,7 +1,8 @@
 <script lang="ts">
-import { Button } from "$lib/components/ui/button/index.js";
+import { Button } from "$lib/components/ui/button";
 import { enhance } from '$app/forms';
 import type { User, TimeEntry } from "$lib/server/db/schema";
+import { formatDateToGerman } from '$lib/utils';
 
 export let data: { users: User[]; timeEntries: TimeEntry[]; selectedDate: string };
 
@@ -63,7 +64,7 @@ function entriesByUserForSelectedDate() {
           <div class="flex flex-col gap-2">
             {#each entriesByUserForSelectedDate()[user.id] as entry (entry.id)}
               <div class="bg-blue-500/30 border border-blue-500 rounded p-2 text-xs mb-1 relative">
-                <div class="font-bold">{entry.date} {entry.startTime}–{entry.endTime}</div>
+                <div class="font-bold">{formatDateToGerman(entry.date)} {entry.startTime}–{entry.endTime}</div>
                 <div>{entry.description}</div>
               </div>
             {:else}
