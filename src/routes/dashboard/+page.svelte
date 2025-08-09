@@ -73,7 +73,7 @@ function changeMonth(offset: number) {
 <!-- Quick Time Entry Form (Mobile-First, prominent) -->
 <section class="w-full max-w-lg mx-auto mt-4 mb-8">
 	<h1 class="text-2xl font-bold mb-2 text-center">Quick Time Entry</h1>
-	<form method="post" action="?/addTimeEntry" class="rounded-lg shadow p-4 flex flex-col gap-4 sticky-form" autocomplete="off">
+	<form method="post" action="?/addTimeEntry" class="rounded-lg shadow p-4 flex flex-col gap-4" autocomplete="off">
 		<div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
 			<div class="flex-1">
 				<Label for="date">📅 Date</Label>
@@ -98,7 +98,7 @@ function changeMonth(offset: number) {
 		{#if formSuccess}
 			<div class="text-green-600 text-sm">Entry added!</div>
 		{/if}
-		<Button type="submit" class="w-full py-3 text-lg font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-md sticky-btn">Add Time Entry</Button>
+		<Button type="submit" class="w-full py-3 text-lg font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-md">Add Time Entry</Button>
 	</form>
 </section>
 
@@ -153,23 +153,6 @@ function changeMonth(offset: number) {
 		{/each}
 	</section>
 {/if}
-
-<style>
-@media (max-width: 640px) {
-  .sticky-btn {
-	position: sticky;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	z-index: 10;
-	border-radius: 0 0 0.75rem 0.75rem;
-  }
-  .sticky-form {
-	padding-bottom: 5rem;
-  }
-}
-
-</style>
 
 <Dialog.Root bind:open={showEditModal}>
 	{#if editingEntry}
