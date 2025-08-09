@@ -71,5 +71,42 @@ export const actions: Actions = {
 			description: String(description)
 		});
 		return { success: true };
+	},
+	updateTimeEntry: async (event) => {
+		if (!event.locals.user) {
+			return fail(401);
+		}
+		const form = await event.request.formData();
+		const id = form.get('id');
+		const date = form.get('date');
+		const startTime = form.get('startTime');
+		const endTime = form.get('endTime');
+		const description = form.get('description');
+
+		if (!id || !date || !startTime || !endTime || !description) {
+			return fail(400, { message: 'All fields are required.' });
+		}
+
+		// Verify the entry belongs to the user
+		const entries = await db
+			.select()
+			.from(timeEntry)
+			.where(and(eq(timeEntry.id, String(id)), eq(timeEntry.userId, event.locals.user.id)));
+
+		if (entries.length === 0) {
+			return fail(403, { message: 'Time entry not found or access denied.' });
+		}
+
+		await db
+			.update(timeEntry)
+			.set({
+				date: String(date),
+				startTime: String(startTime),
+				endTime: String(endTime),
+				description: String(description)
+			})
+			.where(eq(timeEntry.id, String(id)));
+
+		return { success: true };
 	}
 };

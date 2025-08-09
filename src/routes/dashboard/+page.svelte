@@ -1,14 +1,61 @@
 <script lang="ts">
-import type { PageServerData } from './$types';
+import type { PageData } from './$types';
 import { Button } from "$lib/components/ui/button/index.js";
 import { Input } from "$lib/components/ui/input/index.js";
 import { Label } from "$lib/components/ui/label/index.js";
+import * as Dialog from "$lib/components/ui/dialog";
 import { goto } from '$app/navigation';
 import { formatDateToGerman, formatMonthYearToGerman } from '$lib/utils';
 
-let { data }: { data: PageServerData } = $props();
+export let data: PageData;
 let formError: string | null = null;
 let formSuccess: boolean = false;
+
+// Edit modal state
+let showEditModal = false;
+let editingEntry: typeof data.timeEntries[number] | null = null;
+
+function openEditModal(entry: typeof data.timeEntries[number]) {
+  editingEntry = { ...entry };
+  showEditModal = true;
+  formError = null;
+  formSuccess = false;
+}
+
+function closeEditModal() {
+  showEditModal = false;
+  editingEntry = null;
+  formError = null;
+  formSuccess = false;
+}
+
+// Handle form submission
+async function handleSubmit(event: SubmitEvent) {
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+  
+  try {
+    const response = await fetch(form.action, {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+	
+	console.log('result.status', result.status)
+    
+    if (result.status === 200) {
+      formSuccess = true;
+      closeEditModal();
+      // Refresh the page to show updated data
+      window.location.reload();
+    } else {
+      formError = result.message || 'Failed to update time entry';
+    }
+  } catch (error) {
+    formError = 'An error occurred while updating the time entry';
+  }
+}
 
 // Month navigation logic
 function getMonthName(month: string) {
@@ -92,6 +139,14 @@ function changeMonth(offset: number) {
 									<span class="block text-xs text-gray-500">Description</span>
 									<span class="truncate">{entry.description}</span>
 								</div>
+								<div class="flex-shrink-0">
+									<Button 
+										variant="outline"
+										on:click={() => openEditModal(entry)}
+									>
+										Edit
+									</Button>
+								</div>
 							</div>
 						</li>
 					{/each}
@@ -115,4 +170,83 @@ function changeMonth(offset: number) {
 	padding-bottom: 5rem;
   }
 }
+
 </style>
+
+<Dialog.Root bind:open={showEditModal}>
+	{#if editingEntry}
+		<Dialog.Content>
+			<Dialog.Header>
+				<Dialog.Title>Edit Time Entry</Dialog.Title>
+				<Dialog.Description>
+					Make changes to your time entry.
+				</Dialog.Description>
+			</Dialog.Header>
+
+			<form 
+				method="post" 
+				action="?/updateTimeEntry" 
+				class="flex flex-col gap-4" 
+				on:submit|preventDefault={handleSubmit}
+			>
+				<input type="hidden" name="id" value={editingEntry.id} />
+				{#if formError}
+					<div class="text-red-600 text-sm">{formError}</div>
+				{/if}
+				
+				<div>
+					<Label for="edit-date">Date</Label>
+					<Input 
+						id="edit-date" 
+						name="date" 
+						type="date" 
+						required 
+						value={editingEntry.date} 
+					/>
+				</div>
+
+				<div class="flex gap-4">
+					<div class="flex-1">
+						<Label for="edit-startTime">From</Label>
+						<Input 
+							id="edit-startTime" 
+							name="startTime" 
+							type="time" 
+							required 
+							value={editingEntry.startTime} 
+						/>
+					</div>
+					<div class="flex-1">
+						<Label for="edit-endTime">To</Label>
+						<Input 
+							id="edit-endTime" 
+							name="endTime" 
+							type="time" 
+							required 
+							value={editingEntry.endTime} 
+						/>
+					</div>
+				</div>
+
+				<div>
+					<Label for="edit-description">Description</Label>
+					<Input 
+						id="edit-description" 
+						name="description" 
+						type="text" 
+						required 
+						value={editingEntry.description} 
+						maxlength={100} 
+					/>
+				</div>
+
+				<Dialog.Footer class="gap-2">
+					<Dialog.Close>
+						<Button type="reset" variant="outline">Cancel</Button>
+					</Dialog.Close>
+					<Button type="submit" variant="default">Save Changes</Button>
+				</Dialog.Footer>
+			</form>
+		</Dialog.Content>
+	{/if}
+</Dialog.Root>
