@@ -42,8 +42,6 @@ async function handleSubmit(event: SubmitEvent) {
     
     const result = await response.json();
 	
-	console.log('result.status', result.status)
-    
     if (result.status === 200) {
       formSuccess = true;
       closeEditModal();
