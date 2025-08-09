@@ -73,7 +73,4 @@ function entriesByUserForSelectedDate() {
         </div>
       {/each}
     </div>
-    <form method="POST" action="?/logout" use:enhance class="w-full max-w-lg mx-auto mt-8">
-      <Button type="submit" class="w-full">Logout</Button>
-    </form>
   </section>
