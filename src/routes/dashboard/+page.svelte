@@ -55,6 +55,33 @@ async function handleSubmit(event: SubmitEvent) {
   }
 }
 
+async function handleDelete() {
+  if (!editingEntry || !confirm('Are you sure you want to delete this time entry?')) {
+    return;
+  }
+  
+  const formData = new FormData();
+  formData.append('id', editingEntry.id);
+  
+  try {
+    const response = await fetch('?/deleteTimeEntry', {
+      method: 'POST',
+      body: formData
+    });
+    
+    const result = await response.json();
+	
+    if (result.status === 200) {
+      closeEditModal();
+      window.location.reload();
+    } else {
+      formError = result.message || 'Failed to delete time entry';
+    }
+  } catch (error) {
+    formError = 'An error occurred while deleting the time entry';
+  }
+}
+
 // Month navigation logic
 function getMonthName(month: string) {
   return formatMonthYearToGerman(month);
@@ -222,10 +249,17 @@ function changeMonth(offset: number) {
 				</div>
 
 				<Dialog.Footer class="gap-2">
-					<Dialog.Close>
-						<Button type="reset" variant="outline">Cancel</Button>
-					</Dialog.Close>
-					<Button type="submit" variant="default">Save Changes</Button>
+					<div class="flex gap-2 w-full">
+						<div class="flex-1">
+							<Button type="button" variant="destructive" on:click={handleDelete}>Delete</Button>
+						</div>
+						<div class="flex gap-2">
+							<Dialog.Close>
+								<Button type="reset" variant="outline">Cancel</Button>
+							</Dialog.Close>
+							<Button type="submit" variant="default">Save Changes</Button>
+						</div>
+					</div>
 				</Dialog.Footer>
 			</form>
 		</Dialog.Content>

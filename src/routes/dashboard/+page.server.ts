@@ -108,5 +108,32 @@ export const actions: Actions = {
 			.where(eq(timeEntry.id, String(id)));
 
 		return { success: true };
+	},
+	deleteTimeEntry: async (event) => {
+		if (!event.locals.user) {
+			return fail(401);
+		}
+		const form = await event.request.formData();
+		const id = form.get('id');
+
+		if (!id) {
+			return fail(400, { message: 'Entry ID is required.' });
+		}
+
+		// Verify the entry belongs to the user
+		const entries = await db
+			.select()
+			.from(timeEntry)
+			.where(and(eq(timeEntry.id, String(id)), eq(timeEntry.userId, event.locals.user.id)));
+
+		if (entries.length === 0) {
+			return fail(403, { message: 'Time entry not found or access denied.' });
+		}
+
+		await db
+			.delete(timeEntry)
+			.where(eq(timeEntry.id, String(id)));
+
+		return { success: true };
 	}
 };
