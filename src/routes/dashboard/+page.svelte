@@ -25,16 +25,6 @@ function changeMonth(offset: number) {
 }
 </script>
 
-
-
-
-<!-- Admin Panel Button (visible only to admins) -->
-{#if data.user?.role === 'admin'}
-  <div class="w-full max-w-lg mx-auto mb-4 flex justify-end">
-	<button type="button" class="px-3 py-1 text-sm border rounded" on:click={() => goto('/admin-dashboard')}>Admin Panel</button>
-  </div>
-{/if}
-
 <!-- Quick Time Entry Form (Mobile-First, prominent) -->
 <section class="w-full max-w-lg mx-auto mt-4 mb-8">
 	<h1 class="text-2xl font-bold mb-2 text-center">Quick Time Entry</h1>
