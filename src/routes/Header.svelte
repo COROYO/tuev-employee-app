@@ -7,8 +7,16 @@
 	import { page } from "$app/stores";
 </script>
 
-<header>
-	<div class="flex flex-row items-center justify-end gap-4 p-4">
+<header class="flex flex-row justify-between p-4">
+	<div class="flex flex-row justify-center items-center">
+		{#if $page.url.pathname === '/admin-dashboard'}
+			<Button type="submit" class="w-full" href="/dashboard">To Time Entry</Button>
+		{/if}
+		{#if $page.url.pathname === '/dashboard' && $page.data.user?.role === 'admin'}
+			<Button type="submit" class="w-full" href="/admin-dashboard">To Admin Panel</Button>
+		{/if}
+	</div>
+	<div class="flex flex-row items-center justify-end gap-4">
 		{#if $page.data.user}
 		<form method="post" action="../?/logout" class="w-full max-w-lg mx-auto">
 			<Button type="submit" class="w-full">Logout</Button>
@@ -29,8 +37,4 @@
 </header>
 
 <style>
-	header {
-		display: flex;
-		justify-content: flex-end;
-	}
 </style>
