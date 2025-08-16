@@ -4,6 +4,7 @@
 	import { Button } from "$lib/components/ui/button/index.js";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
+	import { t } from '$lib/translations';
 
 	let { form }: { form: ActionData } = $props();
 </script>
@@ -11,9 +12,9 @@
 <form method="post" class="flex flex-col gap-2" action="?/login" use:enhance>
 	<div class="flex flex-col gap-2 max-w-md">
 		<div class="flex-1">
-			<Label for="username">
-				Username
-			</Label>
+				<Label for="username">
+					 {$t('username')}
+				</Label>
 			<Input
 				id="username"
 				name="username"
@@ -21,9 +22,9 @@
 			/>
 		</div>
 		<div class="flex-1">
-			<Label for="password">
-				Password
-			</Label>
+				<Label for="password">
+					 {$t('password')}
+				</Label>
 			
 			<Input
 				id="password"
@@ -34,14 +35,14 @@
 		</div>
 	</div>
 	<div class="flex flex-row gap-2">
-		<Button type="submit">
-			Login
-		</Button>
-		<Button
-			type="submit"
-			formaction="?/register"
-			>Register</Button
-		>
+			<Button type="submit">
+				 {$t('login_button')}
+			</Button>
+			<Button
+				type="submit"
+				formaction="?/register"
+				 >{$t('register_button')}</Button
+			>
 	</div>
 </form>
 <p style="color: red">{form?.message ?? ''}</p>

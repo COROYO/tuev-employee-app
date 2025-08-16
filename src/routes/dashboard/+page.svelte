@@ -1,4 +1,5 @@
 <script lang="ts">
+
 import type { PageData } from './$types';
 import { Button } from "$lib/components/ui/button/index.js";
 import { Input } from "$lib/components/ui/input/index.js";
@@ -6,6 +7,7 @@ import { Label } from "$lib/components/ui/label/index.js";
 import * as Dialog from "$lib/components/ui/dialog";
 import { goto } from '$app/navigation';
 import { formatDateToGerman, formatMonthYearToGerman } from '$lib/utils';
+import { t } from '$lib/translations';
 
 export let data: PageData;
 let formError: string | null = null;
@@ -99,41 +101,41 @@ function changeMonth(offset: number) {
 
 <!-- Quick Time Entry Form (Mobile-First, prominent) -->
 <section class="w-full max-w-lg mx-auto mt-4 mb-8">
-	<h1 class="text-2xl font-bold mb-2 text-center">Quick Time Entry</h1>
+		<h1 class="text-2xl font-bold mb-2 text-center">{$t('quick_time_entry')}</h1>
 	<form method="post" action="?/addTimeEntry" class="rounded-lg shadow p-4 flex flex-col gap-4" autocomplete="off">
 		<div class="flex flex-col gap-2 sm:flex-row sm:gap-4">
 			<div class="flex-1">
-				<Label for="date">📅 Date</Label>
+					<Label for="date">📅 {$t('date')}</Label>
 				<Input id="date" name="date" type="date" required value={new Date().toISOString().slice(0, 10)} autofocus class="w-full" />
 			</div>
 			<div class="flex-1">
-				<Label for="startTime">⏰ From</Label>
-				<Input id="startTime" name="startTime" type="time" required class="w-full" value={new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} />
+					<Label for="startTime">⏰ {$t('from')}</Label>
+				<Input id="startTime" name="startTime" type="time" required class="w-full" />
 			</div>
 			<div class="flex-1">
-				<Label for="endTime">⏱️ To</Label>
+					<Label for="endTime">⏱️ {$t('to')}</Label>
 				<Input id="endTime" name="endTime" type="time" required class="w-full" />
 			</div>
 		</div>
 		<div>
-			<Label for="description">📝 Description</Label>
-			<Input id="description" name="description" type="text" required class="w-full" placeholder="What did you do?" maxlength={100} />
+				<Label for="description">📝 {$t('description')}</Label>
+				<Input id="description" name="description" type="text" required class="w-full" placeholder={$t('what_did_you_do')} maxlength={100} />
 		</div>
 		{#if formError}
 			<div class="text-red-600 text-sm">{formError}</div>
 		{/if}
-		{#if formSuccess}
-			<div class="text-green-600 text-sm">Entry added!</div>
-		{/if}
-		<Button type="submit" class="w-full py-3 text-lg font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-md">Add Time Entry</Button>
+			{#if formSuccess}
+				<div class="text-green-600 text-sm">{$t('entry_added')}</div>
+			{/if}
+			<Button type="submit" class="w-full py-3 text-lg font-semibold rounded bg-blue-600 hover:bg-blue-700 text-white shadow-md">{$t('add_time_entry')}</Button>
 	</form>
 </section>
 
 <!-- Month Navigation -->
 <div class="w-full max-w-lg mx-auto flex items-center justify-center gap-2 mt-4 mb-4">
-  <Button type="button" on:click={() => changeMonth(-1)} aria-label="Previous month">←</Button>
+	<Button type="button" on:click={() => changeMonth(-1)} aria-label={$t('previous_month')}>←</Button>
   <span class="font-semibold">{getMonthName(data.selectedMonth)}</span>
-  <Button type="button" on:click={() => changeMonth(1)} aria-label="Next month">→</Button>
+	<Button type="button" on:click={() => changeMonth(1)} aria-label={$t('next_month')}>→</Button>
 </div>
 
 <!-- Time Entries List (below form, mobile-friendly) -->

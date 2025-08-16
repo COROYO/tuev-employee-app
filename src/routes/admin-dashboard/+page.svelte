@@ -3,6 +3,7 @@ import { Button } from "$lib/components/ui/button";
 import { enhance } from '$app/forms';
 import type { User, TimeEntry } from "$lib/server/db/schema";
 import { formatDateToGerman } from '$lib/utils';
+import { t } from '$lib/translations';
 
 export let data: { users: User[]; timeEntries: TimeEntry[]; selectedDate: string };
 
@@ -44,10 +45,10 @@ function entriesByUserForSelectedDate() {
 }
 </script>
   <section class="w-full max-w-6xl mx-auto mt-8 mb-8">
-    <h1 class="text-2xl font-bold mb-4 text-center">Admin Dashboard</h1>
-    <p class="mb-6 text-center">Overview of all users' time entries for a specific day.</p>
+  <h1 class="text-2xl font-bold mb-4 text-center">{$t('admin_dashboard')}</h1>
+  <p class="mb-6 text-center">{$t('overview_all_users_time_entries')}</p>
     <div class="flex items-center justify-center gap-2 mb-6">
-      <Button type="button" on:click={() => changeDay(-1)} aria-label="Previous day">←</Button>
+  <Button type="button" on:click={() => changeDay(-1)} aria-label={$t('previous_day')}>←</Button>
       <input
         type="date"
         value={data.selectedDate}
@@ -55,7 +56,7 @@ function entriesByUserForSelectedDate() {
         class="border rounded px-2 py-1"
         max={formatDate(today)}
       />
-      <Button type="button" on:click={() => changeDay(1)} aria-label="Next day">→</Button>
+  <Button type="button" on:click={() => changeDay(1)} aria-label={$t('next_day')}>→</Button>
     </div>
     <div class="flex gap-6 overflow-x-auto">
       {#each data.users as user}
@@ -68,7 +69,7 @@ function entriesByUserForSelectedDate() {
                 <div>{entry.description}</div>
               </div>
             {:else}
-              <div class="text-xs text-gray-400 text-center">No entries</div>
+              <div class="text-xs text-gray-400 text-center">{$t('no_entries')}</div>
             {/each}
           </div>
         </div>
